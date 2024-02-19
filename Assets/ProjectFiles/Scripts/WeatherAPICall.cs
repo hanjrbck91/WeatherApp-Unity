@@ -48,7 +48,7 @@ public class WeatherAPICall : MonoBehaviour
             JsonData weatherData = JsonUtility.FromJson<JsonData>(jsonResponse);
 
             // Update UI with weather data
-            if (temperatureText != null)
+            if (!System.Object.ReferenceEquals(temperatureText,null))
             {
                 // Convert temperature from Kelvin to Celsius
                 float temperatureInKelvin = weatherData.main.temp;
@@ -57,7 +57,7 @@ public class WeatherAPICall : MonoBehaviour
 
                 temperatureText.text = temp.ToString() + "°C"; // Display temperature with 2 decimal places
             }
-            if (cityNameInputField != null)
+            if (cityNameInputField is not null)
             {
                 cityText.text = cityNameInputField.text.ToString();
             }
