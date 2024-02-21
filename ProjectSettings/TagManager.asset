@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Rain
+  - Snow
+  - Haze
+  - Clear
+  - Lighting
+  - Clouds
   layers:
   - Default
   - TransparentFX

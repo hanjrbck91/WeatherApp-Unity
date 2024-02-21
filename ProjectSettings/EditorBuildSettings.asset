@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/ProjectFiles/Scenes/WeatherDesktop.unity
+    guid: 0f6237f5ac67d4942b31ce3275874eb9
   m_configObjects: {}

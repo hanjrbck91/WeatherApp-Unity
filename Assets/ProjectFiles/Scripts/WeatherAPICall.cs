@@ -26,6 +26,7 @@ public class WeatherAPICall : MonoBehaviour
         // Attach an event listener to the InputField to trigger the API call
         cityNameInputField.onEndEdit.AddListener(OnCityNameEntered);
     }
+  
 
     private async void OnCityNameEntered(string cityName)
     {
