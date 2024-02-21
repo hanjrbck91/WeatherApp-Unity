@@ -10,7 +10,10 @@ public class WeatherAPICall : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI cityText;
     [SerializeField] private TextMeshProUGUI temperatureText;
+    [SerializeField] private TextMeshProUGUI weatherDataText;
     [SerializeField] private TMP_InputField cityNameInputField;
+    [SerializeField] private GameObject[] weatherIcons;
+
     [Tooltip("Text which shows if the city entered is wrong or misspelled.")]
     [SerializeField] private TextMeshProUGUI errorMessage;
 
@@ -43,6 +46,7 @@ public class WeatherAPICall : MonoBehaviour
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
             Debug.Log("JSON Response: " + jsonResponse);
+            TurnOnOtherUI();
 
             // Deserialize JSON response into a C# object
             JsonData weatherData = JsonUtility.FromJson<JsonData>(jsonResponse);
@@ -50,6 +54,8 @@ public class WeatherAPICall : MonoBehaviour
             // Update UI with weather data
             if (!System.Object.ReferenceEquals(temperatureText,null))
             {
+                // setting of the errormessage from ui since the city is correct
+                errorMessage.gameObject.SetActive(false);
                 // Convert temperature from Kelvin to Celsius
                 float temperatureInKelvin = weatherData.main.temp;
                 float temperatureInCelsius = temperatureInKelvin - 273.15f;
@@ -61,6 +67,46 @@ public class WeatherAPICall : MonoBehaviour
             {
                 cityText.text = cityNameInputField.text.ToString();
             }
+            if (weatherDataText != null && weatherData != null && weatherData.weather != null && weatherData.weather.Length > 0)
+            {
+                foreach (var weather in weatherIcons)
+                {
+                    weather.gameObject.SetActive(false);
+                }
+                // Get the main weather condition as a string
+                string weatherCondition = weatherData.weather[0].main;
+
+                // Display the main weather condition
+               // weatherDataText.text = weatherCondition;
+
+
+                // Find the game object with the corresponding tag in the weather icon array
+                GameObject matchingIcon = null;
+
+                foreach (GameObject icon in weatherIcons)
+                {
+                    if (icon.CompareTag(weatherCondition))
+                    {
+                        matchingIcon = icon;
+                        break;
+                    }
+                }
+
+                // Activate the matching game object if found
+                if (matchingIcon != null)
+                {
+                    matchingIcon.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogWarning("No game object found for weather condition: " + weatherCondition);
+                }
+            }
+            //else
+            //{
+            //    Debug.LogError("Weather data or weatherDataText is null or invalid.");
+            //}
+
             else
             {
                 Debug.LogError("Temperature Text component is not assigned.");
@@ -79,11 +125,30 @@ public class WeatherAPICall : MonoBehaviour
 
     private void ShowErrorMessage(string message)
     {
+        errorMessage.gameObject.SetActive(true);
         errorMessage.text = message;
+        TurnOffOtherUI();
     }
 
     private void OnDestroy()
     {
         httpClient.Dispose(); // Dispose HttpClient to free resources
+    }
+
+    void TurnOffOtherUI()
+    {
+        cityText.gameObject.SetActive(false);
+        temperatureText.gameObject.SetActive(false);
+        weatherDataText.gameObject.SetActive(false);
+        foreach (var weather in weatherIcons)
+        {
+            weather.gameObject.SetActive(false);
+        }
+    }
+    void TurnOnOtherUI()
+    {
+        cityText.gameObject.SetActive(true);
+        temperatureText.gameObject.SetActive(true);
+        weatherDataText.gameObject.SetActive(true);
     }
 }
